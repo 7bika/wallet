@@ -1,30 +1,43 @@
 {
   "expo": {
     "name": "my-app",
-    "slug": "my-app",
+    "slug": "my_app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": ["my_app", "1581548719282960"],
+    "facebookAppId": "1581548719282960",
+    "jsEngine": "hermes",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "jsEngine": "jsc",
+      "bundleIdentifier": "com.example.my_app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "config": {
+        "softwareKeyboardLayoutMode": "pan",
+        "jsEngine": "hermes",
+        "package": "com.iheb.my_app"
+      },
+      "web": {
+        "favicon": "./assets/favicon.png"
+      },
+      "extra": {
+        "eas": {
+          "projectId": "f766fd43-6777-42bc-b301-8980ebb6c336"
+        }
       }
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
     }
   }
 }
