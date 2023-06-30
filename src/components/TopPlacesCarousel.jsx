@@ -34,7 +34,12 @@ const TopPlacesCarousel = ({ list }) => {
               navigation.navigate("TourDetails", { trip: item })
             }}
           >
-            <CardFavoriteIcon active={false} onPress={() => {}} />
+            <CardFavoriteIcon
+              active={false}
+              onPress={() => {
+                alert("added to favorite")
+              }}
+            />
             <SharedElement
               id={`trip.${item.id}.image`}
               style={StyleSheet.absoluteFillObject}

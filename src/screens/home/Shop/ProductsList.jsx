@@ -12,7 +12,9 @@ export default function ProductsList() {
       data={products}
       keyExtractor={(product) => product.id}
       renderItem={({ item }) => (
-        <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate("ProductDetails", { id: item.id })}
+        >
           <ProductCard {...item} />
         </TouchableOpacity>
       )}

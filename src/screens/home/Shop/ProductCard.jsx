@@ -3,17 +3,20 @@ import { View, Text, Pressable, Image, TouchableOpacity } from "react-native"
 import { products } from "./../../../../products"
 import { AntDesign } from "@expo/vector-icons"
 import { useColorScheme } from "nativewind"
+import { useNavigation } from "@react-navigation/native"
 
-export default function ProductCard({
-  image,
-  category,
-  title,
-  price,
-  description,
-}) {
+export default function ProductCard({ ...item }) {
+  const { image, category, title, price, description, id } = { ...item }
+
   const [count, setCount] = React.useState(1)
   const { colorScheme } = useColorScheme()
   const product = products[0]
+
+  const navigation = useNavigation()
+
+  if (count < 0) {
+    setCount(0)
+  }
 
   return (
     <View className={"w-full bg-white dark:bg-gray-50/10 rounded-3xl p-5 my-5"}>
@@ -56,11 +59,11 @@ export default function ProductCard({
           {description}
         </Text>
         <TouchableOpacity
-          onPress={() => alert("added to cart")}
+          onPress={() => navigation.navigate("ProductDetails", { id })}
           className="flex-row justify-center rounded-full bg-black/90 dark:bg-white/90 p-3 w-10/12 self-center mt-5"
         >
           <Text className="text-white dark:text-black font-bold">
-            Add To Cart
+            More Details
           </Text>
         </TouchableOpacity>
       </View>

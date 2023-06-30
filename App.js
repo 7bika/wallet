@@ -14,6 +14,7 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 // import TabNavigator from "./src/navigations/TabNavigator"
 import RoomDetails from "./src/screens/home/rooms/RoomDetails"
 import TourDetails from "./src/screens/home/tours/TourDetails"
+import ProductDetails from "./src/screens/home/Shop/ProductDetails"
 // import { createSharedElementStackNavigator } from "react-navigation-shared-element"
 
 // routing :
@@ -105,6 +106,19 @@ export default function App({ navigation }) {
           <Stack.Screen
             name="TourDetails"
             component={TourDetails}
+            options={{
+              headerShown: false,
+              useNativeDriver: true,
+              cardStyleInterpolator: ({ current: { progress } }) => ({
+                cardStyle: {
+                  opacity: progress,
+                },
+              }),
+            }}
+          />
+          <Stack.Screen
+            name="ProductDetails"
+            component={ProductDetails}
             options={{
               headerShown: false,
               useNativeDriver: true,

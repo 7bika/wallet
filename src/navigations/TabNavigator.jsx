@@ -10,9 +10,11 @@ import {
   Profile,
 } from "../screens/home/index"
 import Icon from "../components/icon"
+import DrawerNavigator from './DrawerNavigator
 
 const Tab = createBottomTabNavigator()
 
+// ! not working replaced with HOME in screens/home/Home
 const TabNavigator = () => {
   return (
     <Tab.Navigator
@@ -25,7 +27,7 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Rooms"
         component={Rooms}
-        options={{
+        options={{s
           headerShown: false,
           tabBarIcon: () => {
             return <Icon icon="Rooms" size={40} />
@@ -69,6 +71,12 @@ const TabNavigator = () => {
         options={{ headerShown: false }}
         name="Wishlist"
         component={Wishlist}
+      />
+    </Tab.Navigator>
+     <Tab.Screen
+        options={{ headerShown: false }}
+        name="DrawerNavigator"
+        component={DrawerNavigator}
       />
     </Tab.Navigator>
   )

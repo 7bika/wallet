@@ -1,5 +1,5 @@
 import React from "react"
-import { View, StyleSheet, TouchableOpacity } from "react-native"
+import { View, StyleSheet, TouchableOpacity, Button } from "react-native"
 import { colors, sizes, spacing } from "./../../../constants/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import TourDetailsCard from "./../../../components/TourDetailsCard"

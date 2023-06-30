@@ -1,5 +1,5 @@
 import React, { useMemo, useRef } from "react"
-import { View, StyleSheet, Text } from "react-native"
+import { View, StyleSheet, Text, Button } from "react-native"
 import { colors, sizes, spacing } from "./../constants/theme"
 import * as Animatable from "react-native-animatable"
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet"
@@ -146,6 +146,7 @@ const TourDetailsCard = ({ trip }) => {
             buttonTitle="See All"
           />
           <Reviews reviews={trip.reviews} />
+          <Button style={style.button} title="book now" />
         </Animated.View>
       </BottomSheetScrollView>
     </BottomSheet>
@@ -192,6 +193,10 @@ const styles = StyleSheet.create({
   },
   rating: {
     marginHorizontal: spacing.l,
+  },
+  button: {
+    borderRadius: 10,
+    color: "black",
   },
 })
 
