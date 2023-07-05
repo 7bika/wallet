@@ -10,13 +10,14 @@ import {
   Profile,
 } from "../screens/home/index"
 import Icon from "../components/icon"
-import DrawerNavigator from './DrawerNavigator
+import DrawerNavigator from './DrawerNavigator'
 
 const Tab = createBottomTabNavigator()
 
 // ! not working replaced with HOME in screens/home/Home
 const TabNavigator = () => {
   return (
+    
     <Tab.Navigator
       initialRouteName="Rooms"
       screenOptions={{

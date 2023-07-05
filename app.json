@@ -21,6 +21,7 @@
       "bundleIdentifier": "com.example.my_app"
     },
     "android": {
+      "blockedPermissions": ["android.permission.RECORD_AUDIO"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -38,6 +39,19 @@
           "projectId": "f766fd43-6777-42bc-b301-8980ebb6c336"
         }
       }
+    },
+    "expo-camera": {
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+    },
+    "expo-barcode-scanner": {
+      "barCodeTypes": ["qr"],
+      "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+    },
+
+    "expo-media-library": {
+      "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+      "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+      "isAccessMediaLocationEnabled": true
     }
   }
 }

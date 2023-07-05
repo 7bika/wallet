@@ -1,16 +1,17 @@
 import React from "react"
-import { View, StyleSheet, TouchableOpacity, Button } from "react-native"
+import { View, StyleSheet, TouchableOpacity } from "react-native"
 import { colors, sizes, spacing } from "./../../../constants/theme"
 import { useSafeAreaInsets } from "react-native-safe-area-context"
 import TourDetailsCard from "./../../../components/TourDetailsCard"
 import * as Animatable from "react-native-animatable"
-import TourDetailsCarousel from "../../../components/TourDetailsCarousel"
+import TourDetailsCarousel from "./../../../components/TourDetailsCarousel"
 import { AntDesign } from "@expo/vector-icons"
 
 const TourDetails = ({ navigation, route }) => {
   const insets = useSafeAreaInsets()
   const { trip } = route.params
   const slides = [trip.image, ...trip.gallery]
+
   return (
     <View style={styles.container}>
       <Animatable.View

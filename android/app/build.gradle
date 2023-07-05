@@ -115,6 +115,7 @@ android {
 
     namespace 'com.iheb.my_app'
     defaultConfig {
+       vectorDrawables.useSupportLibrary = true
         applicationId 'com.iheb.my_app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion

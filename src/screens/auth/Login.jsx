@@ -237,6 +237,14 @@ const Login = ({ navigation }) => {
         >
           <Text> home</Text>
         </TouchableOpacity>
+        {/* calendar pick component */}
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("CalendarPick")
+          }}
+        >
+          <Text> Calendar </Text>
+        </TouchableOpacity>
 
         {/* Google and Facebook Sign-In */}
         <View style={styles.socialButtonsContainer}>

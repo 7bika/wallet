@@ -15,6 +15,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler"
 import RoomDetails from "./src/screens/home/rooms/RoomDetails"
 import TourDetails from "./src/screens/home/tours/TourDetails"
 import ProductDetails from "./src/screens/home/Shop/ProductDetails"
+import CalendarPick from "./src/screens/home/CalendarPick"
+import Camera from "./src/screens/home/Shop/Camera"
+import ChatBot from "./src/screens/ChatBot"
+import Picture from "./src/screens/home/Picture"
 // import { createSharedElementStackNavigator } from "react-navigation-shared-element"
 
 // routing :
@@ -83,6 +87,16 @@ export default function App({ navigation }) {
             component={ResetPasswordScreen}
           />
 
+          {/* //* calendar pick  */}
+
+          <Stack.Screen
+            options={{ headerShown: false }}
+            name="CalendarPick"
+            component={CalendarPick}
+          />
+
+          {/* //* home screen  */}
+
           <Stack.Screen
             options={{ headerShown: false }}
             name="Home"
@@ -129,6 +143,49 @@ export default function App({ navigation }) {
               }),
             }}
           />
+
+          <Stack.Screen
+            name="Camera"
+            component={Camera}
+            options={{
+              headerShown: false,
+              useNativeDriver: true,
+              cardStyleInterpolator: ({ current: { progress } }) => ({
+                cardStyle: {
+                  opacity: progress,
+                },
+              }),
+            }}
+          />
+
+          <Stack.Screen
+            name="ChatBot"
+            component={ChatBot}
+            options={{
+              headerShown: false,
+              useNativeDriver: true,
+              cardStyleInterpolator: ({ current: { progress } }) => ({
+                cardStyle: {
+                  opacity: progress,
+                },
+              }),
+            }}
+          />
+
+          <Stack.Screen
+            name="Picture"
+            component={Picture}
+            options={{
+              headerShown: false,
+              useNativeDriver: true,
+              cardStyleInterpolator: ({ current: { progress } }) => ({
+                cardStyle: {
+                  opacity: progress,
+                },
+              }),
+            }}
+          />
+
           {/* <Stack.Screen name="TabNavigator" component={TabNavigator} /> */}
         </Stack.Navigator>
       </NavigationContainer>

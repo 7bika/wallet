@@ -13,6 +13,7 @@ import {
 import Icon from "../../components/icon"
 import { colors, sizes } from "./../../constants/theme"
 import SearchNavigator from "./../../navigations/SearchNavigator"
+import Profile from "./Profile"
 // import Home from "./../../../assets/icons/Home.png"
 // import icons from "./../../constants/icons"
 
