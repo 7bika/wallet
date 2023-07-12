@@ -1,9 +1,9 @@
 import { StatusBar } from "expo-status-bar"
-import { useState, useEffect } from "react"
+import React, { useState, useEffect, useRef } from "react"
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import { NavigationContainer } from "@react-navigation/native"
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
-import { Login, Signup, OnBoardingScreen } from "./src/screens"
+import { Login, Signup, OnBoardingScreen, ForgotPassword } from "./src/screens"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import ResetPasswordScreen from "./src/screens/auth/ResetPasswordScreen"
 import Weclome from "./src/screens/Welcome/Weclome"
@@ -19,6 +19,9 @@ import CalendarPick from "./src/screens/home/CalendarPick"
 import Camera from "./src/screens/home/Shop/Camera"
 import ChatBot from "./src/screens/ChatBot"
 import Picture from "./src/screens/home/Picture"
+import EditUser from "./src/screens/home/EditUser"
+import DrawerNavigator from "./src/navigations/DrawerNavigator"
+
 // import { createSharedElementStackNavigator } from "react-navigation-shared-element"
 
 // routing :
@@ -40,9 +43,41 @@ export default function App({ navigation }) {
     })
   }, [])
 
+  useEffect(() => {
+    checkAuthentication()
+  }, [])
+
+  const checkAuthentication = async () => {
+    const token = await AsyncStorage.getItem("token")
+    const expirationDate = await AsyncStorage.getItem("expirationDate")
+
+    if (token && expirationDate) {
+      const currentDate = new Date().getTime()
+      if (currentDate < parseInt(expirationDate)) {
+        // User is authenticated and within the expiration date
+        // Navigate to the protected screen
+        // e.g., navigation.navigate("Home");
+        navigationRef.current?.navigate("Home")
+      } else {
+        // Token has expired
+        // Perform logout or session expiration handling
+        // e.g., logout();
+        // Redirect to the login screen
+        navigationRef.current?.navigate("Login")
+      }
+    } else {
+      // No token or expiration date found
+      // User is not logged in
+      // Redirect to the login screen
+      navigationRef.current?.navigate("Login")
+    }
+  }
+
+  const navigationRef = React.useRef()
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer>
+      <NavigationContainer ref={navigationRef}>
         <StatusBar hidden />
         <Stack.Navigator>
           {/* <Stack.Navigator initialRouteName="onBoardingScreens" /> */}
@@ -173,8 +208,50 @@ export default function App({ navigation }) {
           />
 
           <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPassword}
+            options={{
+              headerShown: false,
+              useNativeDriver: true,
+              cardStyleInterpolator: ({ current: { progress } }) => ({
+                cardStyle: {
+                  opacity: progress,
+                },
+              }),
+            }}
+          />
+
+          <Stack.Screen
             name="Picture"
             component={Picture}
+            options={{
+              headerShown: false,
+              useNativeDriver: true,
+              cardStyleInterpolator: ({ current: { progress } }) => ({
+                cardStyle: {
+                  opacity: progress,
+                },
+              }),
+            }}
+          />
+
+          <Stack.Screen
+            name="EditUser"
+            component={EditUser}
+            options={{
+              headerShown: false,
+              useNativeDriver: true,
+              cardStyleInterpolator: ({ current: { progress } }) => ({
+                cardStyle: {
+                  opacity: progress,
+                },
+              }),
+            }}
+          />
+
+          <Stack.Screen
+            name="DrawerNavigator"
+            component={DrawerNavigator}
             options={{
               headerShown: false,
               useNativeDriver: true,

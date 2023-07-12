@@ -34,11 +34,7 @@ const CustomInput = (props) => {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginBottom: 35,
-    justifyContent: "space-between",
-  },
+  container: {},
   title: {
     marginLeft: 10,
     marginBottom: 5,
@@ -59,7 +55,7 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    height: 40,
+    height: 43,
     fontFamily: "serif",
     fontSize: 15,
   },

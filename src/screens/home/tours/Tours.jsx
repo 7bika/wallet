@@ -28,11 +28,11 @@ const Rooms = () => {
   return (
     <View style={styles.container}>
       <MainHeader title="Booking App" />
-      <ScreenHeader mainTitle="Find Your" secondTitle="Dream Room" />
+      <ScreenHeader mainTitle="Find Your" secondTitle="Dream Tour" />
       <ScrollView showsVerticalScrollIndicator={false}>
         <TopPlacesCarousel list={TOP_PLACES} />
         <SectionHeader
-          title="Popular Rooms"
+          title="Popular Tours"
           buttonTitle="See All"
           onPress={() => {
             alert("clicked")

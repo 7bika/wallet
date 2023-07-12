@@ -1,65 +1,96 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  Button,
-  TouchableHighlight,
-} from "react-native"
 import React, { useState } from "react"
+import { View, Text, TextInput, StyleSheet, Button } from "react-native"
+import axios from "axios"
 
-const ResetPasswordScreen = ({ navigation }) => {
-  const [input, setInput] = useState("")
+const ResetPasswordScreen = ({ navigation, route }) => {
+  const { token } = route.params
+  const [password, setPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
-  const inputHandler = (text) => {
-    setInput(text)
+  const handleResetPassword = async () => {
+    if (!password || !confirmPassword) {
+      setError("Please fill in all fields")
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match")
+      return
+    }
+
+    setLoading(true)
+    setError(null)
+
+    try {
+      const response = await axios.patch(
+        `http://192.168.1.12:3000/api/users/resetPassword/${token}`,
+        {
+          password,
+          passwordConfirm: confirmPassword,
+        }
+      )
+
+      setLoading(false)
+      navigation.navigate("Login") // Redirect to the login screen after successful password reset
+    } catch (error) {
+      setLoading(false)
+      setError("Failed to reset password. Please try again later.")
+    }
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <Text style={{ top: 100, alignSelf: "center", color: "#cc9900" }}>
-        {" "}
-        forgot your password ?{" "}
-      </Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Reset Password</Text>
+
       <TextInput
-        style={styles.email}
-        keyboardType="email-address"
-        placeholder="enter your email"
-        value={input}
-        onTextInput={inputHandler}
-        autoCapitalize="none"
+        style={styles.input}
+        placeholder="New Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
       />
-      {/* <Text> {input} </Text> */}
-      <TouchableHighlight
-        style={styles.reset}
-        activeOpacity={0.6}
-        underlayColor="#DDDDDD"
-        onPress={() => alert("Pressed!")}
-      >
-        <Text> Reset Password</Text>
-      </TouchableHighlight>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm New Password"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry
+      />
+
+      {error && <Text style={styles.errorText}>{error}</Text>}
+
+      <Button
+        title="Reset Password"
+        onPress={handleResetPassword}
+        disabled={loading}
+      />
     </View>
   )
 }
 
 const styles = StyleSheet.create({
-  email: {
-    borderWidth: 2,
-    borderColor: "#cc9900",
-    padding: 10,
-    margin: 10,
-    width: 300,
-    alignSelf: "center",
-    height: 50,
-    top: 100,
+  container: {
+    flex: 1,
+    padding: 20,
   },
-  reset: {
-    alignItems: "center",
-    borderBottomColor: "#cc9900",
-    borderBottomEndRadius: 5,
-    justifyContent: "center",
-    margin: 10,
-    marginTop: 100,
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  input: {
+    height: 40,
+    borderColor: "#cc9900",
+    borderWidth: 1,
+    marginBottom: 20,
+    padding: 10,
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 20,
   },
 })
 

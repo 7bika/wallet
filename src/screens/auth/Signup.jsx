@@ -1,51 +1,39 @@
+import React, { useState, useEffect } from "react"
 import {
   View,
   Text,
   StyleSheet,
   Image,
   Animated,
-  Button,
   TouchableHighlight,
-  TouchableOpacity,
-  Dimensions,
+  TouchableWithoutFeedback,
+  ScrollView,
 } from "react-native"
-import { useState, useEffect } from "react"
-import React from "react"
-import Logo from "./../../../assets/dev-images/hote2-removebg-preview.png"
+import { AntDesign } from "@expo/vector-icons"
+import { Svg, Path, LinearGradient, Stop, Defs } from "react-native-svg"
+import Logo from "../../../assets/dev-images/hote2-removebg-preview.png"
 import CustomInput from "../../components/custom/CustomInput"
 import CustomButton from "../../components/custom/CustomButton"
-import AsyncStorage from "@react-native-async-storage/async-storage"
-import { AntDesign } from "@expo/vector-icons"
-import { Svg, Path } from "react-native-svg"
+import Modal from "react-native-modal"
+import axios from "axios"
 
-const Login = ({ navigation }) => {
+const Signup = ({ navigation }) => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState("")
-
-  // * verify email and password :
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [isModalVisible, setModalVisible] = useState(false)
+  const [redirectToLogin, setRedirectToLogin] = useState(false)
+  const [modalOpacity, setModalOpacity] = useState(new Animated.Value(0))
 
-  // * animation
-  const fadeAnim = new Animated.Value(0)
-  const opacityAnim = new Animated.Value(0)
+  // Animation
   const logoAnim = new Animated.Value(0)
   const formAnim = new Animated.Value(0)
   const buttonAnim = new Animated.Value(0)
-  const buttonTextAnim = new Animated.Value(0)
 
   useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start()
-    Animated.timing(opacityAnim, {
-      toValue: 1,
-      duration: 1000,
-      useNativeDriver: true,
-    }).start()
     Animated.timing(logoAnim, {
       toValue: 1,
       duration: 1000,
@@ -56,16 +44,9 @@ const Login = ({ navigation }) => {
       duration: 1000,
       useNativeDriver: true,
     }).start()
-
     Animated.timing(buttonAnim, {
       toValue: 1,
       duration: 1000,
-      useNativeDriver: true,
-    }).start()
-    Animated.timing(buttonTextAnim, {
-      toValue: 1,
-      duration: 1000,
-
       useNativeDriver: true,
     }).start()
   }, [])
@@ -90,71 +71,103 @@ const Login = ({ navigation }) => {
     outputRange: [50, 0],
   })
 
+  const isValidName = (email) => {
+    return email.length > 5
+  }
+
+  const isValidEmail = (email) => {
+    return email.includes("@")
+  }
+
+  const isValidPassword = (password) => {
+    return password.length > 5 && /\d/.test(password)
+  }
+
   const handleSubmit = async () => {
-    setLoading(true)
-
-    // const validEmail = validator.isEmail(email)
-    // const validEmailConfirm = email.validEmail()
-    // const validName = validator.isAlpha(name)
-
-    // const validPassword = (password.trim().length !== 0 && password.trim().length > 5)
-
     if (!name || !email || !password || !passwordConfirm) {
-      alert("All fields are required")
-      setLoading(false)
+      setError("All fields are required")
       return
     }
 
-    // console.log("SIGNUP REQUEST => ", name, email, password);
+    if (!isValidName(name)) {
+      setError("Please enter a valid name that is more than 5 characters long")
+      return
+    }
+
+    if (!isValidEmail(email)) {
+      setError("Invalid email")
+      return
+    }
+
+    if (!isValidPassword(password)) {
+      setError(
+        "Password must be at least 5 characters long and contain at least one letter and one number"
+      )
+      return
+    }
+
+    if (password !== passwordConfirm) {
+      setError("Passwords do not match")
+      return
+    }
+
+    setLoading(true)
+    setError(null)
+
     try {
-      const { data } = await axios.get(
-        "http://localhost:3000/api/users/signup",
+      setLoading(true)
+      const response = await axios.post(
+        "http://192.168.1.12:3000/api/users/signup",
         {
-          name: name,
-          email: email,
-          password: password,
-          passwordConfirm: passwordConfirm,
+          name,
+          email,
+          password,
+          passwordConfirm,
         }
       )
+      console.log("Response:", response.data)
+      setLoading(false)
+      // console.log("Registration successful", name, email, password)
+      setModalVisible(true)
 
-      if (data.error) {
-        alert(data.error)
-        setLoading(false)
-      } else {
-        // * save response in async storage
-        await AsyncStorage.setItem("@auth", JSON.stringify(data))
-        setLoading(false)
-        console.log("SIGN IN SUCCESS => ", data)
-        alert("Sign up successful")
-
-        // * redirect
-        navigation.navigate("Signin")
-      }
-    } catch (err) {
-      console.log(err)
+      Animated.timing(modalOpacity, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start()
+      setTimeout(() => {
+        setModalVisible(false)
+        setRedirectToLogin(true)
+      }, 2000) // Redirect after 2 seconds (adjust the duration as desired)
+    } catch (error) {
+      console.error("Error", error)
+      setError("Registration failed")
+    } finally {
       setLoading(false)
     }
   }
 
+  useEffect(() => {
+    if (redirectToLogin) {
+      navigation.navigate("Login")
+    }
+  }, [redirectToLogin])
+
   return (
-    <View style={styles.container}>
-      <View style={styles.top}>
-        {/* You can replace the background image with your own */}
-        {/* <Image
-          source={require("./../../../assets/background-image.jpg")}
-          style={styles.backgroundImage}
-        /> */}
-        <View style={styles.box}>
-          <Svg
-            height="100%"
-            width={Dimensions.get("screen").width}
-            viewBox="0 0 1440 320"
-          >
-            <Path fill="#3b5998" d="M0,224L1440,32L1440,320L0,320Z" />
-          </Svg>
-        </View>
-        <View style={styles.overlay} />
-      </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Svg height="500" width="600" viewBox="0 0 1440 320" style={styles.svg}>
+        <Defs>
+          <LinearGradient id="gradient" x1="0%" y1="50%" x2="100%" y2="50%">
+            <Stop offset="5%" stopColor="#C59361" />
+            <Stop offset="5%" stopColor="#0A96E7" />
+          </LinearGradient>
+        </Defs>
+        <Path
+          fill="#0A96E7"
+          d="M0,96L48,128C96,160,192,224,288,245.3C384,267,480,245,576,208C672,171,768,117,864,122.7C960,128,1056,192,1152,213.3C1248,235,1344,213,1392,202.7L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+        />
+      </Svg>
+
       <Animated.View
         style={[
           styles.logoContainer,
@@ -196,14 +209,17 @@ const Login = ({ navigation }) => {
           secureTextEntry
           keyboardType="default"
         />
+
         <CustomInput
           icon="lock-closed-outline"
-          placeholder="Confirm your Password"
+          placeholder="Confirm Password"
           value={passwordConfirm}
           setValue={setPasswordConfirm}
           secureTextEntry
           keyboardType="default"
         />
+
+        {error && <Text style={styles.errorText}>{error}</Text>}
 
         <Animated.View
           style={[
@@ -215,46 +231,77 @@ const Login = ({ navigation }) => {
           ]}
         >
           <CustomButton
-            title="sign up"
+            title="Sign Up"
             loading={loading}
             onPress={handleSubmit}
           />
-          <TouchableHighlight
-            underlayColor={"grey"}
-            style={styles.goback}
-            onPress={() => {
-              navigation.goBack()
-            }}
-          >
-            <AntDesign name="leftcircle" size={30} color="black" />
-          </TouchableHighlight>
         </Animated.View>
       </Animated.View>
-    </View>
+
+      <Modal isVisible={isModalVisible} backdropOpacity={0.5}>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalContainer}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <Animated.View
+                  style={[styles.successModalCircle, { opacity: modalOpacity }]}
+                >
+                  <AntDesign
+                    style={{ margin: 10, alignSelf: "center" }}
+                    name="check"
+                    size={40}
+                    color="#68D391"
+                  />
+                </Animated.View>
+                <Text style={styles.successModalText}>Sign Up Successful</Text>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+      <TouchableHighlight
+        underlayColor="transparent"
+        style={styles.goBack}
+        onPress={() => navigation.goBack()}
+      >
+        <AntDesign name="arrowleft" size={15} color="white" />
+      </TouchableHighlight>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
     backgroundColor: "#F6F8FA",
   },
+  svg: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   logoContainer: {
-    flex: 1,
-    justifyContent: "center",
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
     alignItems: "center",
   },
   formContainer: {
-    flex: 2,
     marginHorizontal: 20,
     borderRadius: 20,
     backgroundColor: "white",
-    padding: 20,
+    padding: 10,
     elevation: 5,
+    marginTop: 200,
   },
   logo: {
-    height: "130%",
-    width: "80%",
+    height: 270,
+    width: 300,
+    bottom: 40,
   },
   title: {
     fontSize: 20,
@@ -262,40 +309,49 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
-  customButton: {
+  errorText: {
+    color: "red",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  buttonContainer: {
     marginTop: 20,
-    backgroundColor: "grey",
-    borderRadius: 5,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
     alignItems: "center",
   },
-  buttonText: {
-    color: "grey",
-    fontSize: 10,
-    fontWeight: "bold",
+  goBack: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: "#0A96E7",
   },
-  goback: {
-    marginTop: 20,
-    borderWidth: 2,
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the opacity value as desired
+  },
+  modalContent: {
+    backgroundColor: "#68D391",
     borderRadius: 10,
-    alignSelf: "center",
-    padding: 5,
+    padding: 35,
+    alignItems: "center",
   },
-  top: {},
-  bottom: {
-    position: "absolute",
-    width: Dimensions.get("screen").width,
-    bottom: 0,
+  successModalCircle: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: "#fff",
+    marginBottom: 20,
   },
-  box: {
-    backgroundColor: "#2471A3",
-    height: 80,
-  },
-  bottomWavy: {
-    position: "absolute",
-    bottom: 20,
+  successModalText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginTop: 20,
+    textAlign: "center",
+    color: "#fff",
   },
 })
 
-export default Login
+export default Signup
